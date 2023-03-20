@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- <link rel="stylesheet" href="script.js" type="text/Javascript"> -->
+   
+    <!-- <script src="script.js"></script> -->
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="index.css">
+    <title>Document</title>
+</head>
+
+<body>
+   
+        <h1>To Do List</h1>
+        <div class="main-container">
+            <div class="input-text">
+                <input type="text" id="list-input" placeholder="type here...">
+                <button id="add-list-btn" onclick=addList()>ADD</button>
+            </div>
+            <div class="added-text">
+                <ul class="added-text-ul" id="mylist">
+
+                </ul>
+            </div>
+       
+    </div>
+    <script>
+        let list = document.getElementById('mylist');
+        let arr = [];
+        let arr2 = JSON.parse(localStorage.getItem("arr"));
+        // console.log(arr2);
+        // console.log(arr);
+        // console.log(typeof(arr2));
+        if (arr2 != null && arr2.length != 0) {
+            arr = arr2
+        }
+        // console.log(arr2.length);
+        // console.log(arr.length);
+        let flag = true;
+
+        function addList() {
+            let inpt = document.getElementById('list-input').value;
+            if (inpt.length == 0) {
+                alert("Enter some data!");
+            }
+            else if (inpt.length >= 100) {
+                alert("Text should be less than 100 words!");
+            }
+            else {
+                document.getElementById('list-input').value = "";
+                arr.push(inpt);
+                localStorage.setItem('arr', JSON.stringify(arr));
+                let li = document.createElement("li");
+                li.id = arr.length;
+                let p = document.createElement("p");
+                let btn = document.createElement("button");
+                btn.className = "innerbtn";
+                btn.id = "todo" + arr.length;
+                p.innerText = inpt;
+                btn.innerText = "X";
+                li.appendChild(p);
+                li.appendChild(btn);
+                list.appendChild(li);
+                let idkey = "todo" + arr.length;
+                document.getElementById(idkey).addEventListener("click", removeData);
+            }
+        }
+
+        function addAll() {
+            document.getElementById('mylist').innerHTML = "";
+            // arr = JSON.parse(localStorage.getItem("arr"));
+            for (let j = 0; j < arr.length; j++) {
+                let li = document.createElement("li");
+                li.id = j;
+                let p = document.createElement("p");
+                let btn = document.createElement("button");
+                btn.className = "innerbtn";
+                btn.id = "todo" + j;
+                p.innerText = arr[j];
+                btn.innerText = "X";
+                li.appendChild(p);
+                li.appendChild(btn);
+                list.appendChild(li);
+                let idkey = "todo" + j;
+                document.getElementById(idkey).addEventListener("click", removeData);
+            }
+        }
+
+        function removeData() {
+            let actId = this.id;
+            let actidx = actId.toString().substring(4);
+            arr = JSON.parse(localStorage.getItem("arr"));
+            arr.splice(actidx, 1);
+            localStorage.setItem('arr', JSON.stringify(arr));
+            addAll();
+        }
+
+        // if some data avail in the local storage
+        if (flag == true && arr.length != 0) {
+            // flag = false;
+            addAll();
+        }
+        flag = false;
+    </script>
+</body>
+
+</html>
